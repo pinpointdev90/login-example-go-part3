@@ -1,4 +1,4 @@
-Qiitaに[投稿した記事](https://qiita.com/kins/items/0822627563891b702910)のソースコードです。
+Qiitaに[投稿した記事](https://qiita.com/kins/items/3695458182a6d58cc350)のソースコードです。
 # 目標
 
 - MySQLを起動する
