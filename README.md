@@ -55,7 +55,7 @@ version: "3.8"
 
 services:
   api:
-    container_name: login-go-api
+    container_name: login-example-api
     build:
       dockerfile: Dockerfile
       context: .
@@ -73,7 +73,7 @@ services:
       db:
         condition: service_healthy
   db:
-    container_name: login-go-db
+    container_name: login-example-db
     image: mysql:8.0.33
     platform: linux/amd64
     environment:
@@ -81,11 +81,11 @@ services:
       MYSQL_DATABASE: login-db
       MYSQL_USER: login-user
       MYSQL_PASSWORD: login-pass
-    ports: 
+    ports:
       - "33306:3306"
     volumes:
       - type: volume
-        source: login-go-db
+        source: login-example-db
         target: /var/lib/mysql
       - type: bind
         source: ./_tools/mysql/conf.d
@@ -99,14 +99,14 @@ services:
       timeout: 5s
       retries: 5
   mail:
-    container_name: login-go-mail
+    container_name: login-example-mail
     image: mailhog/mailhog
     platform: linux/x86_64
     ports:
       - "8025:8025"
       - "1025:1025"
 volumes:
-  login-go-db:
+  login-example-db:
 ```
 
 part2で作成したdocker-compose.ymlを修正いたしました。
@@ -128,7 +128,7 @@ $ go get github.com/jmoiron/sqlx
 ```
 
 必要なパッケージが準備できたら接続用のコードを書いていきます。
-
+db/db.go
 ```
 package db
 
@@ -185,7 +185,7 @@ package main
 
 import (
 	"fmt"
-	"login-go/db"
+	"login-example/db"
 )
 
 func main() {
@@ -205,7 +205,22 @@ logで確認
 $ docker compose logs api -f
 
 # 最後に「MySQL接続OK」と出れば接続できています！
-login-example-api  | building...
-login-example-api  | running...
-login-example-api  | MySQL接続OK
+login-example-api   |   __    _   ___  
+login-example-api   |  / /\  | | | |_) 
+login-example-api   | /_/--\ |_| |_| \_ , built with Go 
+login-example-api   | 
+login-example-api   | mkdir /app/tmp
+login-example-api   | watching .
+login-example-api   | watching _tools
+login-example-api   | watching _tools/mysql
+login-example-api   | watching _tools/mysql/conf.d
+login-example-api   | watching _tools/mysql/init.d
+login-example-api   | watching db
+login-example-api   | !exclude tmp
+login-example-api   | building...
+login-example-api   | go: downloading github.com/go-sql-driver/mysql v1.7.1
+login-example-api   | go: downloading github.com/jmoiron/sqlx v1.3.5
+login-example-api   | running...
+login-example-api   | MySQL接続OK
+
 ```
